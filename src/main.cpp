@@ -70,17 +70,17 @@ ButtonState buttonState = buttonRead();  //kallar på funktionen som läser av o
 
 switch (state) {
 
-  case LED_OFF:                         //om vår LEDs state är LED_OFF, dvs LOW (händer alltid 
-    if (buttonState == PRESSED) {       // i första fallet) och om knappens state är nedtryckt
-      Serial.println("Turning on LED"); // kommer lampan att slås på och nuvarande state bli HIGH
+  case LED_OFF:
+    if (buttonState == PRESSED) {
+      Serial.println("Turning on LED"); 
       digitalWrite(LED_PIN, HIGH);
       state = LED_ON;
     }
     break;
 
-  case LED_ON:                          //om vår LEDs state är LED_OFF, dvs HIGH (händer när knappen
-    if (buttonState == PRESSED) {         // har tryckts ned) och om knappen har tryckts ned igen
-      Serial.println("Turning off LED");  // kommer lampan att slås av och nuvarande state bli LOW
+  case LED_ON:                          
+    if (buttonState == RELEASED) {
+      Serial.println("Turning off LED");
       digitalWrite(LED_PIN, LOW);
       state = LED_OFF;
     }
