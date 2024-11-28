@@ -71,7 +71,7 @@ ButtonState buttonState = buttonRead();  //kallar på funktionen som läser av o
 switch (state) {
 
   case LED_OFF:
-    if (buttonState == PRESSED) {
+    if (buttonState == DOWN) {
       Serial.println("Turning on LED"); 
       digitalWrite(LED_PIN, HIGH);
       state = LED_ON;
@@ -79,7 +79,7 @@ switch (state) {
     break;
 
   case LED_ON:                          
-    if (buttonState == RELEASED) {
+    if (buttonState == UP) {
       Serial.println("Turning off LED");
       digitalWrite(LED_PIN, LOW);
       state = LED_OFF;
