@@ -1,9 +1,9 @@
-
 #include <Arduino.h>
 
 const int BUTTON_PIN = 12;
 const int LED_PIN = 10;
 const int DEBOUNCE_DELAY = 50;
+
 
 enum ButtonState{
   UP,
@@ -14,7 +14,8 @@ enum ButtonState{
 
 enum SystemState{
   LED_ON,
-  LED_OFF
+  LED_OFF,
+  LED_BLINK
 };
 
 void setup() {
@@ -63,6 +64,9 @@ ButtonState buttonRead() {    //definierar en debouncing-funktion som kallas på
 }
 
 SystemState state = LED_OFF;            //utgångsläge för vår LEDs state är LED_OFF, dvs LOW
+const int BLINK_INTERVAL = 500;
+unsigned long LAST_BLINK = 0;
+int LED_TOGGLE = 0;
 
 void loop() {
 
@@ -71,15 +75,30 @@ ButtonState buttonState = buttonRead();  //kallar på funktionen som läser av o
 switch (state) {
 
   case LED_OFF:
-    if (buttonState == DOWN) {
+    if (buttonState == PRESSED) {
       Serial.println("Turning on LED"); 
       digitalWrite(LED_PIN, HIGH);
       state = LED_ON;
     }
     break;
 
-  case LED_ON:                          
-    if (buttonState == UP) {
+  case LED_ON:
+    if (buttonState == PRESSED) {
+      Serial.println("Blinking LED");
+      unsigned long startTime = millis();
+      
+      if (startTime - LAST_BLINK > BLINK_INTERVAL){
+        LAST_BLINK = millis();
+        LED_TOGGLE = !LED_TOGGLE;
+        digitalWrite(LED_PIN, LED_TOGGLE);
+      }
+
+      state = LED_BLINK;
+    }
+    break;
+
+  case LED_BLINK:                          
+    if (buttonState == PRESSED) {
       Serial.println("Turning off LED");
       digitalWrite(LED_PIN, LOW);
       state = LED_OFF;
